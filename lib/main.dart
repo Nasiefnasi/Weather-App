@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+// import 'package:velocity_x/velocity_x.dart';
+import 'package:weatherapp_starter_project/consts/themes.dart';
 import 'package:weatherapp_starter_project/design/weatherapp.dart';
 
 void main() {
@@ -13,12 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: 'Weather App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: "poppins",
-        primarySwatch: Colors.blue,
-      ),
+      theme: CustomThemes.lightThems,
+      darkTheme: CustomThemes.darkThems,
+      themeMode: ThemeMode.system,
       home: const WeatherApp(),
     );
   }
