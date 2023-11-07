@@ -7,6 +7,8 @@ import 'package:weatherapp_starter_project/consts/images.dart';
 import 'package:weatherapp_starter_project/consts/string.dart';
 import 'package:weatherapp_starter_project/controllers/maincontroler.dart';
 import 'package:weatherapp_starter_project/model/currentweathermodel.dart';
+import 'package:weatherapp_starter_project/model/hourelyweather.dart';
+// import 'package:weatherapp_starter_project/model/hourelyweather.dart';
 
 class WeatherApp extends StatelessWidget {
   const WeatherApp({super.key});
@@ -57,7 +59,8 @@ class WeatherApp extends StatelessWidget {
                       "${data.name}"
                           .text
                           .fontFamily('poppins_black')
-                          .size(30).uppercase
+                          .size(30)
+                          .uppercase
                           .color(theme.primaryColor)
                           .letterSpacing(3)
                           .make(),
@@ -65,21 +68,22 @@ class WeatherApp extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Image.asset(
-                            "assets/weather/01d.png",
+                            "assets/weather/${data.weather![0].icon}.png",
                             width: 80,
                             height: 80,
                           ),
                           RichText(
                               text: TextSpan(children: [
                             TextSpan(
-                              text: "${data.main!.temp}37$degree",
+                              text:
+                                  "${data.main!.temp!.toInt().toDouble()}37$degree",
                               style: TextStyle(
                                   fontFamily: "poppins",
                                   color: theme.primaryColor,
-                                  fontSize: 64),
+                                  fontSize: 56),
                             ),
                             TextSpan(
-                              text: "Sunny",
+                              text: "${data.weather![0].main}",
                               style: TextStyle(
                                   fontFamily: "poppins_light",
                                   color: theme.primaryColor,
@@ -98,7 +102,7 @@ class WeatherApp extends StatelessWidget {
                                 Icons.expand_less_rounded,
                                 color: theme.iconTheme.color,
                               ),
-                              label: "41$degree"
+                              label: "${data.main!.tempMax}$degree"
                                   .text
                                   .color(theme.iconTheme.color)
                                   .make()),
@@ -108,7 +112,7 @@ class WeatherApp extends StatelessWidget {
                                 Icons.expand_less_rounded,
                                 color: theme.iconTheme.color,
                               ),
-                              label: "26$degree"
+                              label: "${data.main!.tempMin}$degree"
                                   .text
                                   .color(theme.iconTheme.color)
                                   .make()),
@@ -118,7 +122,11 @@ class WeatherApp extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: List.generate(3, (index) {
                           var iconsList = [clouds, humidly, windspeed];
-                          var values = ["70%", "40%", "3.5km/h"];
+                          var values = [
+                            "${data.clouds!.all}%",
+                            "${data.main!.humidity}%",
+                            "${data.wind!.speed}km/h"
+                          ];
                           return Column(
                             children: [
                               Image.asset(
@@ -140,33 +148,119 @@ class WeatherApp extends StatelessWidget {
                       10.heightBox,
                       const Divider(),
                       10.heightBox,
-                      SizedBox(
-                        height: 150,
-                        child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: 6,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              padding: const EdgeInsets.all(8),
-                              margin: const EdgeInsets.only(right: 4),
-                              decoration: BoxDecoration(
-                                color: cardcolor,
-                                borderRadius: BorderRadius.circular(12),
+                      // SizedBox(
+                      //   height: 150,
+                      //   child: ListView.builder(
+                      //     physics: const BouncingScrollPhysics(),
+                      //     scrollDirection: Axis.horizontal,
+                      //     shrinkWrap: true,
+                      //     itemCount: 6,
+                      //     itemBuilder: (context, index) {
+                      //       return Container(
+                      //         padding: const EdgeInsets.all(8),
+                      //         margin: const EdgeInsets.only(right: 4),
+                      //         decoration: BoxDecoration(
+                      //           color: cardcolor,
+                      //           borderRadius: BorderRadius.circular(12),
+                      //         ),
+                      //         child: Column(children: [
+                      //           "${index + 1} AM".text.gray200.make(),
+                      //           Image.asset(
+                      //             "assets/weather/10n.png",
+                      //             width: 80,
+                      //           ),
+                      //           "38$degree".text.white.make()
+                      //         ]),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),c
+                      FutureBuilder(
+                        future: controler.hourelyweatherdata,
+                        builder: (context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            // HourlyWeatherDetails hourlyData = snapshot.data ;
+                            // HourlyWeatherDetails hourlyData = snapshot.data;
+                            // dynamic hourlyDatas = snapshot.data;
+                            // hourlyDatas as HourlyWeatherDetails;
+
+                            return SizedBox(
+                              height: 150,
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: 3,
+                                // hourlyData.list!.length > 6
+                                //     ? 6
+                                //     : hourlyData.list!.length,
+                                itemBuilder: (context, index) {
+                                  // var time = DateFormat.jm().format(
+                                  //     DateTime.fromMillisecondsSinceEpoch(
+                                  //         hourlyData.list![index].dt!.toInt()));
+                                  return Container(
+                                    padding: const EdgeInsets.all(8),
+                                    margin: const EdgeInsets.only(right: 4),
+                                    decoration: BoxDecoration(
+                                      color: cardcolor,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Column(children: [
+                                      "${index + 1} AM".text.gray200.make(),
+                                      Image.asset(
+                                        "assets/weather/10n.png",
+                                        width: 80,
+                                      ),
+                                      "38$degree".text.white.make()
+                                    ]),
+                                  );
+                                },
                               ),
-                              child: Column(children: [
-                                "${index + 1} AM".text.gray200.make(),
-                                Image.asset(
-                                  "assets/weather/10n.png",
-                                  width: 80,
-                                ),
-                                "38$degree".text.white.make()
-                              ]),
                             );
-                          },
-                        ),
+                          }
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
                       ),
+                      // FutureBuilder(
+                      //   future: controler.hourelyweatherdata,
+                      //   builder: (context, AsyncSnapshot snapshot) {
+                      //     if (snapshot.hasData) {
+                      //       return SizedBox(
+                      //         height: 150,
+                      //         child: ListView.builder(
+                      //           physics: const BouncingScrollPhysics(),
+                      //           scrollDirection: Axis.horizontal,
+                      //           shrinkWrap: true,
+                      //           itemCount: 6,
+                      //           itemBuilder: (context, index) {
+                      //             return Container(
+                      //               padding: const EdgeInsets.all(8),
+                      //               margin: const EdgeInsets.only(right: 4),
+                      //               decoration: BoxDecoration(
+                      //                 color: cardcolor,
+                      //                 borderRadius: BorderRadius.circular(12),
+                      //               ),
+                      //               child: Column(children: [
+                      //                 "${index + 1} AM".text.gray200.make(),
+                      //                 Image.asset(
+                      //                   "assets/weather/10n.png",
+                      //                   width: 80,
+                      //                 ),
+                      //                 "38$degree".text.white.make()
+                      //               ]),
+                      //             );
+                      //           },
+                      //         ),
+                      //       );
+                      //     }
+                      //     return Center(
+                      //       child: CircularProgressIndicator(),
+                      //     );
+                      //   },
+                      // ),
+
                       10.heightBox,
                       const Divider(),
                       10.heightBox,

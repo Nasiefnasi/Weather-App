@@ -56,10 +56,10 @@ class Clouds {
 }
 
 class Main {
-  double? temp;
+ double? temp;
 
-  int? tempMin;
-  int? tempMax;
+  double? tempMin;
+  double? tempMax;
 
   int? humidity;
   int? seaLevel;
@@ -75,9 +75,9 @@ class Main {
   });
 
   factory Main.fromJson(Map<String, dynamic> json) => Main(
-        temp: json["temp"],
-        tempMin: json["temp_min"],
-        tempMax: json["temp_max"],
+        temp: json["temp"]?.toDouble(),
+        tempMin: json["temp_min"]?.toDouble(),
+        tempMax: json["temp_max"]?.toDouble(),
         humidity: json["humidity"],
         seaLevel: json["sea_level"],
         grndLevel: json["grnd_level"],
